@@ -1,80 +1,130 @@
 import React,{Component} from 'react';
 import './App.css';
 import Person from './Person/Person';
+import styled from 'styled-components';
 
+const StyledButton = styled.button<{alt:boolean}>`
+  background-color:green${props=>props.alt ? 'red':'green'};
+  color:white;
+  font:inherit;
+  border:1x solid blue;
+  padding:8px;
+  cursor:pointer;
+
+  &:hover{
+    background-color: ${props=>props.alt ? 'salmon': 'lightgreen'};
+    color:black;
+}
+
+`;
 
 // class App extends Component 
 class App extends Component {
   state = {
     persons:[
-      {name:'Max', age:28},
-      {name:'Manu', age:29},
-      {name:'Benas', age:32}
+      {id: "lal1", name:'Max', age:28},
+      {id: "lal2", name:'Manu', age:29},
+      {id: "lal3", name:'Benas', age:32}
     ],
-    otherState: 'some other value'
+    otherState: 'some other value',
+    showPersons: false
   };
 
 
 
-  switchNameHandler = (newName:any)=>{
-    // console.log('was clicked');
-    // this.state.persons[0].name='Maximilian';
-    this.setState({
+  
+
+  nameChangedHandler = (event:any, id:string)=>{
+    const personIndex = this.state.persons.findIndex(p=>{
+      return p.id === id;
+    });
+    const person={
+      ...this.state.persons[personIndex]
+    };
+
+    person.name = event.target.value;
+    const persons = [...this.state.persons];
+    persons[personIndex] = person;
+    this.setState({persons:persons});
+
+
     
-      persons:[
-        {name:newName,age:58},
-        {name:'Manu',age:29},
-        {name:'Benas',age:33}
-      ]
-      
-    })
   }
 
-  nameChangedHandler = (event:any)=>{
-    this.setState({
-      persons:[
-        {name:'Max',age:58},
-        {name:'maxxx',age:29},
-        {name:event.target.value,age:33}
-      ]
-    }
+  deletePersonHandler = (personIndex:number)=>{
+    // const persons = this.state.persons;
+    const persons= [...this.state.persons];
+    persons.splice(personIndex,1);
+    this.setState({persons:persons});
 
-    )
   }
 
-
-
+  togglePersonsHandler = ()=>{
+    const doesShow=this.state.showPersons;
+    this.setState({showPersons:!doesShow});
+  }
 
 render(){
   const style={
-    backgroundColor:'white',
+    backgroundColor:'green',
+    color:'white',
     font:'inherit',
     border:'1x solid blue',
     padding:'8px',
-    cursor:"pointer"
+    cursor:"pointer",
+    ':hover':{
+      backgroundColor: 'lightgreen',
+      color:'black'
+    }
  
+  };
+
+  let persons = null;
+  if(this.state.showPersons){
+    persons= (
+      <div>
+
+        {this.state.persons.map((person,index)=>{
+          return <Person
+          click={()=>this.deletePersonHandler(index)}
+          name={person.name}
+          age={person.age}
+          key = {person.id}
+          changed={(event:Event)=>this.nameChangedHandler(event, person.id)}/>
+
+
+        })}    
+        
+      </div>
+    );
+    style.backgroundColor='red';
+    style[':hover']={
+      backgroundColor: 'salmon',
+      color:'black'   
+     };
   }
+  let classes = [];
+  if (this.state.persons.length<=2){
+    classes.push('red');
+  }
+
+  if (this.state.persons.length<=1){
+    classes.push('bold');
+  }
+
+
   return (
-    <div className="App">
-      <header className="App-header">
+    
+     <div className="App">      
         <h1>hi I am a React App</h1>
-        <p>This is really working!</p>
-        <button
-        style={style}
-         onClick={()=>this.switchNameHandler('maximilian!!1')}>Switch name</button>
-        <Person
-         name ={this.state.persons[0].name}
-          age={this.state.persons[0].age} ></Person>
-        <Person
-         name={this.state.persons[1].name} 
-         age={this.state.persons[1].age} ></Person>
-        <Person
-         name={this.state.persons[2].name} 
-         age={this.state.persons[2].age}
-         click={this.switchNameHandler.bind(this,'ma')} 
-         changed={this.nameChangedHandler}> my hobies: Fishing</Person>
-      </header>
-    </div>
+        <p className= {classes.join(' ')}>This is really working!</p>
+        <StyledButton 
+        alt={this.state.showPersons}        
+        onClick={this.togglePersonsHandler}>Switch name
+        </StyledButton>    
+        {persons}        
+     </div>
+    
   );
   }
 }

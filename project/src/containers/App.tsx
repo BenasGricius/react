@@ -3,13 +3,19 @@ import React,{Component} from 'react';
 import Persons from '../components/Persons/Persons';
 import classes from './App.module.css';
 import Cockpit from '../components/Cockpit/Cockpit';
-
-interface addTitle{
-  name:string;
+import withClass from '../hoc/withClass';
+import Auxilary from '../hoc/Auxilary';
+import AuthContext from '../context/auth-context'
+interface AppProps{
+ 
+  addTitle:string;
+  nextProps:Function;
+  nextState:Function;
+  
 }
 
 // class App extends Component 
-class App  extends Component{
+class App  extends Component<AppProps>{
 
   // constructor(props:any){
   //   super(props);
@@ -22,10 +28,13 @@ class App  extends Component{
       {id: "lal3", name:'Benas', age:32}
     ],
     otherState: 'some other value',
-    showPersons: false
+    showPersons: false,
+    changeCounter:0,
+    authenticated:false,
+    showCockpit:true,
   };
 
-  static getDerivedStateFromProps(props:any,state:any){
+  static getDerivedStateFromProps(props:any,state:string|number|boolean){
     console.log('[App.tsx] getDerivedStateFromProps', props);
     return state;
   }
@@ -38,12 +47,12 @@ class App  extends Component{
   console.log('[App.tsx]componentDidMount')
   }
 
-  shouldComponentUpdate(nextProps:any,nextState:any){
+  shouldComponentUpdate(nextProps:AppProps,nextState:AppProps){
     console.log('[App.tsx] shouldComponentUpdate');
     return true;
   }
 
-  componentDidUpdate(nextProps:any,nextState:any){
+  componentDidUpdate(nextProps:AppProps,nextState:AppProps){
     console.log('[App.tsx] shouldComponentUpdate');
   }
 
@@ -58,7 +67,7 @@ class App  extends Component{
     person.name = event.target.value;
     const persons = [...this.state.persons];
     persons[personIndex] = person;
-    this.setState({persons:persons});
+    this.setState({persons:persons,changeCounter:this.state.changeCounter+1});
 
 
     
@@ -77,6 +86,10 @@ class App  extends Component{
     this.setState({showPersons:!doesShow});
   }
 
+  loginHandler = ()=>{
+    this.setState({authenticated:true});
+  }
+
 render(){
   console.log('[App.tsx]render');
 
@@ -91,6 +104,7 @@ render(){
         persons = {this.state.persons}
         clicked = {this.deletePersonHandler}
         changed = {this.nameChangedHandler}
+        isAuthenticated = {this.state.authenticated}
         />;      
         
      }
@@ -98,19 +112,24 @@ render(){
 
   return (
     
-     <div className={classes.App}>      
-       <Cockpit
+     <AuthContext.Provider value={{authenticated:this.state.authenticated, login: this.loginHandler}}> 
+     {this.state.showCockpit ? (
+
+        <Cockpit
        
-       showPersons={this.state.showPersons}
-       persons={this.state.persons}
-       clicked={this.togglePersonsHandler}
-       />
-        {persons}        
-     </div>
+          showPersons={this.state.showPersons}
+          persons={this.state.persons}
+          clicked={this.togglePersonsHandler}
+          
+      
+        />
+      ): null}
+      {persons}        
+     </AuthContext.Provider>
     
   );
   }
 }
-export default App;
+export default withClass(App, classes.App);
 
 

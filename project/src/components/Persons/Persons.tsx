@@ -3,8 +3,8 @@ import React,{PureComponent} from 'react';
 
 import Person from './Person/Person';
 
-interface prop{
-  persons:any
+interface Pprop{
+  persons:typeof Person;
   clicked:Function;
   changed:Function;
   name?:string;
@@ -15,7 +15,8 @@ interface prop{
 }
 
 
-class Persons extends PureComponent<prop>{
+
+class Persons extends PureComponent<Pprop>{
 
   // static getDerivedStateFromProps(props:any,state:any){
   //   console.log('[Persons.tsx]getDerivedStateFromPros');
@@ -31,7 +32,7 @@ class Persons extends PureComponent<prop>{
   //    return false;
   //  }
   // }
-  getSnapshotBeforeUpdate(prevProps:any, prevState:any){
+  getSnapshotBeforeUpdate(prevProps:Pprop, prevState:Pprop){
     console.log ('[Persons.tsx] getSnapshotBeforeUpdate');
   }
 
@@ -46,7 +47,7 @@ class Persons extends PureComponent<prop>{
 
 
 
-  constructor(props:prop){
+  constructor(props:Pprop){
   super(props)
   }
   render(){
@@ -55,7 +56,7 @@ class Persons extends PureComponent<prop>{
     return (
       
       
-        this.props.persons.map((person:prop,index:number) =>{
+        this.props.persons.map((person:typeof Person,index:number) =>{
         
             return   (
              <Person

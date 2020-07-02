@@ -1,4 +1,4 @@
-import React,{Component} from 'react';
+import React,{Component, MouseEvent,ChangeEvent} from 'react';
 import classes from './Person.module.css';
 import styled from 'styled-components';
 import Auxilary from '../../../hoc/Auxilary';
@@ -6,16 +6,17 @@ import withClass from '../../../hoc/withClass';
 import AuthContext from '../../../context/auth-context';
 
   
-interface prop  {
+export interface Prop  {
+    id?:string;
     name?:string;
     age?:number;
-    children?:string;
-    otherState?:any;
-    click?:any;
-    changed?:any;
+    children?:React.ReactNode;
+    otherState?:Function;
+    click?:((event: React.MouseEvent<HTMLParagraphElement, globalThis.MouseEvent>) => void);
+    changed?:(event: ChangeEvent<HTMLInputElement>) => void;
     key?:number;
     isAuth:boolean;
-   
+    
 
 }
 
@@ -33,8 +34,8 @@ const StyleDiv = styled.div`
 
 `;
 
-class Person extends Component<prop>{
-    constructor(props:prop){
+export class Person extends Component<Prop>{
+    constructor(props:Prop){
         
     super(props);
      
@@ -44,6 +45,9 @@ class Person extends Component<prop>{
    
     } 
    
+    // componentDidMount(){
+    //     this.inputElement.focus();
+    // } 
     // static contextType=AuthContext;
     // componentDidMount(){
     //     this.inputElementRef.current.focus();
@@ -68,7 +72,11 @@ class Person extends Component<prop>{
                     
                     <p onClick={this.props.click} > I'm a {this.props.name} and I am {this.props.age} years Old!</p>
                     <p>{this.props.children} </p>
-                    <input type="text" onChange={this.props.changed} value={this.props.name}/>
+                    <input type="text"
+                    onChange={this.props.changed}
+                    // ref = {(inputEl)=>{this.inputElement = inputEl}} 
+                    value={this.props.name}/>
+
                 </StyleDiv>
             </Auxilary>
         )

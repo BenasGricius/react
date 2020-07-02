@@ -1,8 +1,22 @@
 import React,{useEffect, useRef, useContext} from 'react';
 import classes from '../Cockpit/Cockpit.module.css';
 import AuthContext from '../../context/auth-context';
+import Persons from '../Persons/Persons'
 
-const Cockpit = (props:any)=>{
+
+interface Prop{
+    persons:any;
+    clicked:(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;   
+    name?:string;
+    age?:number;
+    id?:number;
+    isAuthenticated?:boolean;
+    showPersons:boolean;
+    
+  }
+
+
+const Cockpit = (props:Prop)=>{
     const authContext=useContext(AuthContext);
 
     console.log(authContext.authenticated);

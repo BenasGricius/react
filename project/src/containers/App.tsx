@@ -56,7 +56,7 @@ class App  extends Component<AppProps>{
     console.log('[App.tsx] shouldComponentUpdate');
   }
 
-  nameChangedHandler = (event:any, id:string)=>{
+  nameChangedHandler = (event:React.FormEvent<HTMLInputElement>, id:string)=>{
     const personIndex = this.state.persons.findIndex(p=>{
       return p.id === id;
     });
@@ -64,7 +64,7 @@ class App  extends Component<AppProps>{
       ...this.state.persons[personIndex]
     };
 
-    person.name = event.target.value;
+    person.name = event.currentTarget.value;
     const persons = [...this.state.persons];
     persons[personIndex] = person;
     this.setState({persons:persons,changeCounter:this.state.changeCounter+1});

@@ -1,6 +1,6 @@
 import React,{Component} from 'react';
 import classes from './BurgerIngredients.module.css';
-import BurgerBuilder from '../../../containers/BurgerBuilder/BurgerBuilder';
+
 
 
 interface BurgerIngProps {
@@ -24,7 +24,8 @@ class BurgerIngredient extends Component<BurgerIngProps>{
                 ingredient=(
                     <div className ={classes.BreadTop}>
                         <div className={classes.Seeds1}></div>
-                        <div className={classes.Seeds1}></div>
+                        <div className={classes.Seeds2}></div>
+                        
 
                     </div>
                 );

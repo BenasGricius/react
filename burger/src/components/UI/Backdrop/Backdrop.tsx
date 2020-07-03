@@ -3,7 +3,7 @@ import classes from './Backdrop.module.css'
 
 
 interface BackDropProps{
-    clicked: ((event: React.MouseEvent) => void);    
+    clicked?: ((event: React.MouseEvent) => void);    
     show?:boolean;
     // clicked:any
     

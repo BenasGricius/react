@@ -1,40 +1,47 @@
-import React,{MouseEvent} from 'react';
-import Auxilary from '../../../hoc/Auxilary';
+import React,{Component} from 'react';
+import Auxilary from '../../../hoc/Auxilary/Auxilary';
 import { Ingredient } from '../Burger';
 import Button from '../../UI/Button/Button';
 
 interface OrderSummaryProps{
-      purchaseCancelled: (event: React.MouseEvent) => void;
-      purchaseContinued: (event:  React.MouseEvent) => void;     
-   
-      ingredients:Ingredient,
+    purchaseCancelled: (event: React.MouseEvent) => void;
+    purchaseContinued: (event:  React.MouseEvent) => void;   
+    ingredients:Ingredient;
+    price:number;
     
 
 }
 
-const orderSummary = (props:OrderSummaryProps)=>{
-    const ingredientSummary = Object.keys(props.ingredients)
-    .map(igKey=>{
-        return (<li key={igKey}>
-                    <span style={{textTransform:'capitalize'}}>{igKey}</span>:{props.ingredients[igKey as keyof Ingredient ]}
-                </li>);
-    });
-    
+class OrderSummary extends Component<OrderSummaryProps>{ 
+    componentWillUpdate(){
+        console.log('[OrderSummary] WillUpdate');
+    }
 
-    return(
-        <Auxilary>
-            <h3>Your Order</h3>
-            <p> A delicious burger with the following ingredients:</p>
-            <ul>
-                 {ingredientSummary}
-            </ul>
-            <p>Continue to Checkout</p>
-            <Button btnType="Danger" clicked = {props.purchaseCancelled}>CANCEL</Button>
-            <Button btnType="Success" clicked = {props.purchaseContinued}>CONTINUE</Button>
+    render(){
+        const ingredientSummary = Object.keys(this.props.ingredients)
+        .map(igKey=>{
+            return (<li key={igKey}>
+                        <span style={{textTransform:'capitalize'}}>{igKey}</span>:{this.props.ingredients[igKey as keyof Ingredient ]}
+                    </li>);
+        });
+        
 
-        </Auxilary>
-    );
+        return(
+            <Auxilary>
+                <h3>Your Order</h3>
+                <p> A delicious burger with the following ingredients:</p>
+                <ul>
+                    {ingredientSummary}
+                </ul>
+                <p><strong> Total Price:{this.props.price.toFixed(2)}</strong></p>
+                <p>Continue to Checkout</p>
+                <Button btnType="Danger" clicked = {this.props.purchaseCancelled}>CANCEL</Button>
+                <Button btnType="Success" clicked = {this.props.purchaseContinued}>CONTINUE</Button>
+
+            </Auxilary>
+        );
+    }
 
 };
 
-export default orderSummary;
+export default OrderSummary;

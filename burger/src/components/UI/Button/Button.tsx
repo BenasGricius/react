@@ -2,8 +2,7 @@ import React,{MouseEvent} from 'react';
 import classes from './Button.module.css'
 
 interface ButtonProps{
-    clicked: ((event: React.MouseEvent) => void);   
-    
+    clicked: ((event: React.MouseEvent) => void);       
     children?:React.ReactNode;
     btnType:string;
     

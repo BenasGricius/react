@@ -1,6 +1,6 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import classes from './Order.module.css';
-import Burger, { Ingredient } from '../../components/Burger/Burger';
+import { Ingredient } from '../../components/Burger/Burger';
 
 interface OrderProps{
    

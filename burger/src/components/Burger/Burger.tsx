@@ -4,10 +4,11 @@ import BurgerIngredient from './BurgerIngredients/BurgerIngredients';
 
 
 export interface Ingredient{
-    salad:number;
-    bacon:number;
-    cheese:number;
-    meat:number;
+    // salad:number;
+    // bacon:number;
+    // cheese:number;
+    // meat:number;
+    [key: string]: number;
     
 }
 

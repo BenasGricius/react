@@ -6,11 +6,13 @@ import Spinner from '../../../components/UI/Spinner/Spinner';
 import {Ingredient} from '../../../components/Burger/Burger';
 import { RouteComponentProps } from "react-router-dom";
 import Input,{InputConfig} from '../../../components/UI/Input/Input';
-
+import {connect} from 'react-redux';
+import {InitialStateProps} from '../../../store/reducer';
 
 interface ContactDataProps extends RouteComponentProps{    
     ingredients:Ingredient;
     price:number;
+    ings:Ingredient;
 
 }
 
@@ -190,7 +192,7 @@ class ContactData extends Component<ContactDataProps, CState>{
             formData[formElementIdentifier as keyof FormProps]=this.state.orderForm[formElementIdentifier as keyof FormProps].value
         }
         const order={
-            ingredients:this.props.ingredients,
+            ingredients:this.props.ings,
             price:this.props.price,
             orderData:formData
              
@@ -309,4 +311,12 @@ class ContactData extends Component<ContactDataProps, CState>{
 
 }
 
-export default ContactData ;
+const mapStateToProps= (state:InitialStateProps)=>{
+    return{
+        ings:state.ingredients,
+        price:state.totalPrice
+    }
+}
+
+
+export default  connect(mapStateToProps)(ContactData);

@@ -1,5 +1,5 @@
 import React,{Component} from 'react';
-import { RouteComponentProps } from "react-router-dom";
+import {RouteComponentProps} from "react-router-dom";
 import Auxilary from '../../hoc/Auxilary/Auxilary';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
@@ -8,22 +8,25 @@ import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import axios from '../../axios-orders';
-import {connect} from 'react-redux';
+import {connect, MapStateToProps} from 'react-redux';
 import {Dispatch} from 'redux';
-import { EnumActionTypes } from '../../store/actions';
-import { InitialStateProps } from '../../store/reducer';
-// import {Rootstate} from '../../index';
+
+import { InitialStateProps } from '../../store/reducers/burgerBuilder';
+import * as burgerBuilderActions from '../../store/actions/index';
+import { MapsStateToProps } from '../Checkout/Checkout';
 
 
 
-interface  addProps{
-    salad:string,
-    bacon:string,
-    cheese:string,
-    meat:string,
+
+
+// interface  addProps{
+//     salad:string,
+//     bacon:string,
+//     cheese:string,
+//     meat:string,
     
     
-}
+// }
 
  export interface Ingredient{
     salad:number;
@@ -35,10 +38,10 @@ interface  addProps{
     
 }
 
-interface CheckoutProps extends RouteComponentProps{    
-    index?:number
+// interface CheckoutProps extends RouteComponentProps{    
+//     index?:number
     
-}
+// }
 
 interface BurgerBuilderState{
     // ingredients?: Ingredient;
@@ -47,33 +50,32 @@ interface BurgerBuilderState{
     loading?:boolean;
     error?:boolean;
 }
-interface BurgerBuilderProps extends RouteComponentProps{
+export interface BurgerBuilderProps extends RouteComponentProps{
    ings:Ingredient;
    price:number; 
-   onIngredientAdded:Function;
-   onIngredientRemoved:Function;
+   onIngredientAdded: () => void;
+   onIngredientRemoved:() => void;
+   onInitIngredients:() => void;
+   onInitPurchase:() => void;
    index?:number
+   error:boolean;
+   totalPrice:number;
+   ingredients:Ingredient
 }
 
-class BurgerBuilder extends Component<BurgerBuilderProps, BurgerBuilderState,RouteComponentProps>{
+ export class BurgerBuilder extends Component<BurgerBuilderProps, BurgerBuilderState>{
     
 
     state={
         // ingredients:{} as Ingredient,      
         purchasing:false,
-        loading:false,
-        error:false,
+       
         
     } 
 
     componentDidMount(){
-        // axios.get('https://react-my-burger-7309b.firebaseio.com/ingredients.json')
-        // .then(response=>{
-        //     this.setState({ingredients:response.data})
-        // })
-        // .catch(error =>{
-        //     this.setState({error:true})
-        // });
+        this.props.onInitIngredients();
+   
     }
 
     updatePurchaseState(ingredients:Ingredient){
@@ -130,7 +132,7 @@ class BurgerBuilder extends Component<BurgerBuilderProps, BurgerBuilderState,Rou
     }
 
     purchaseContinueHandler=()=>{
-        // // alert('You continue');                
+        this.props.onInitPurchase();              
 
         this.props.history.push('/checkout')
         
@@ -147,7 +149,7 @@ class BurgerBuilder extends Component<BurgerBuilderProps, BurgerBuilderState,Rou
 
         let orderSummary=null;      
        
-        let burger=this.state.error? <p>Ingredients cant be loaded!</p>:<Spinner/>
+        let burger=this.props.error? <p>Ingredients cant be loaded!</p>:<Spinner/>
 
         if(this.props.ings){
             burger=(
@@ -173,9 +175,7 @@ class BurgerBuilder extends Component<BurgerBuilderProps, BurgerBuilderState,Rou
            
 
         }
-        if(this.state.loading){
-            orderSummary=<Spinner/>;
-        } 
+      
         
         return(
             <Auxilary>
@@ -189,18 +189,21 @@ class BurgerBuilder extends Component<BurgerBuilderProps, BurgerBuilderState,Rou
     }
 }
 
-const mapStateToProps=(state:InitialStateProps)=>{
+const mapStateToProps=(state:MapsStateToProps)=>{
     return{
-        ings:state.ingredients,
-        price:state.totalPrice
+        ings:state.burgerBuilder.ingredients,
+        price:state.burgerBuilder.totalPrice,
+        error:state.burgerBuilder.error
     };    
 }
 
 const mapDispatchToProps=(dispatch:Dispatch)=>{
     return{
-        onIngredientAdded:(ingName:string)=>dispatch({type:EnumActionTypes.ADD_INGREDIENT,ingredientName:ingName}),
-        onIngredientRemoved:(ingName:string)=>dispatch({type:EnumActionTypes.REMOVE_INGREDIENT,ingredientName:ingName})
-    }    
+        onIngredientAdded:(ingName:string)=>dispatch(burgerBuilderActions.addIngredient(ingName)),
+        onIngredientRemoved:(ingName:string)=>dispatch(burgerBuilderActions.removeIngredient(ingName)),
+        onInitIngredients:()=>dispatch(burgerBuilderActions.initIngredients()),
+        onInitPurchase:()=>dispatch(burgerBuilderActions.purchaseInit())
+    }   
 }
 
 

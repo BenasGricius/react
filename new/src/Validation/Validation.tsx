@@ -1,6 +1,6 @@
 import React from 'react';
 
-const validation = (props:any) => {
+const validation = (props:string) => {
     let validationMessage='Text long enought';
 
     if (props.inputLenght <= 5){

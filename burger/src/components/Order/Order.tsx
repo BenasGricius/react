@@ -1,15 +1,18 @@
 import React from 'react';
 import classes from './Order.module.css';
 import { Ingredient } from '../../components/Burger/Burger';
+import { OrdersProps } from '../../containers/Orders/Orders';
 
-interface OrderProps{
+
+export interface OrderProps{
    
     price: string; 
     ingredients:Ingredient;
+    
 
 }
 
-const order=(props:OrderProps)=>{
+ export const order=(props:OrderProps)=>{
 
     const ingredients=[];
 

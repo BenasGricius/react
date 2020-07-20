@@ -7,15 +7,33 @@ import {Ingredient} from '../../../components/Burger/Burger';
 import { RouteComponentProps } from "react-router-dom";
 import Input,{InputConfig} from '../../../components/UI/Input/Input';
 import {connect} from 'react-redux';
-import {InitialStateProps} from '../../../store/reducer';
+import {InitialStateProps} from '../../../store/reducers/burgerBuilder';
+import withErrorHandler from'../../../hoc/withErrorHandler/withErrorHandler';
+import * as actions from '../../../store/actions/index';
+import { Dispatch } from 'redux';
+import { MapsStateToProps } from '../Checkout';
+
 
 interface ContactDataProps extends RouteComponentProps{    
     ingredients:Ingredient;
     price:number;
     ings:Ingredient;
+    onOrderBurger:(orderData:OrderData)=>Dispatch
+    loading:boolean;
 
 }
 
+
+export interface OrderData {
+    purchased?:boolean;
+    loading?: boolean;
+    orders?: [];
+    ingredients: Ingredient;
+    price: number;
+    orderData: {
+        [element: string]: string;
+    };
+}
 
 interface FormItemProps {
 
@@ -57,14 +75,15 @@ interface Validation {
     minLength?: number;  
 }
 
-interface FormProps {
+export interface FormProps {
 
     name: FormItemProps;  
     street: FormItemProps;  
     zipCode: FormItemProps;  
     country: FormItemProps;  
     email: FormItemProps;  
-    deliveryMethod: FormItemProps;  
+    deliveryMethod: FormItemProps;
+
     // [key: string]: FormItemProps;
   
   }
@@ -73,7 +92,7 @@ interface FormProps {
   
   interface CState {  
     orderForm: FormProps;  
-    loading: boolean;  
+    loading?: boolean;  
     formIsValid: boolean;  
   }
 
@@ -158,7 +177,7 @@ class ContactData extends Component<ContactDataProps, CState>{
                        {value:'cheapest',displayValue:'Cheapest'}
                     ]
                 },
-                value:'',
+                value:'fastest',
                 validation:{},
                 valid:true
 
@@ -167,15 +186,13 @@ class ContactData extends Component<ContactDataProps, CState>{
 
         },
         formIsValid:false,
-        loading:false
+        // loading:false
     }
 
     orderHandler=(event: { preventDefault: () => void; })=>{
 
         event.preventDefault();
-         this.setState(
-            {loading:true}
-        );
+       
         // const newKey={
         //     name:{} as FormItemProps,
         //     street:{} as FormItemProps,
@@ -198,16 +215,10 @@ class ContactData extends Component<ContactDataProps, CState>{
              
             
         }
+        this.props.onOrderBurger(order);
 
-        axios.post('/orders.json', order)
-        .then(response=>{
-            this.setState({loading:false});
-            this.props.history.push('/');
-        })
-        .catch(error=>{
-            this.setState({loading:false});
-        });
-        console.log(this.props.ingredients);
+        
+        
     }
 
 
@@ -297,26 +308,34 @@ class ContactData extends Component<ContactDataProps, CState>{
                 <Button btnType = "Success" disabled={!this.state.formIsValid} >ORDER</Button>
             </form>
         );
-        if(this.state.loading){
+        if(this.props.loading){
             form = <Spinner/>
         }
         return(
             <div className={classes.ContactData}>
                 <h4>Enter your Contact data</h4>
-                {form}
-                
+                {form}                
             </div>
         )
     }
 
 }
 
-const mapStateToProps= (state:InitialStateProps)=>{
+const mapStateToProps= (state:MapsStateToProps)=>{
     return{
-        ings:state.ingredients,
-        price:state.totalPrice
+        ings:state.burgerBuilder.ingredients,
+        price:state.burgerBuilder.totalPrice,
+        loading:state.loading
     }
 }
 
 
-export default  connect(mapStateToProps)(ContactData);
+const mapDispatchToProps= (dispatch:Dispatch) =>{
+
+    return{
+        onOrderBurger:(orderData:[])=>dispatch(actions.purchaseBurger(orderData))
+    }
+    
+};
+
+export default  connect(mapStateToProps,mapDispatchToProps) (withErrorHandler(ContactData,axios));

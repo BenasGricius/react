@@ -1,5 +1,6 @@
 import React,{Component} from 'react';
 import classes from './BurgerIngredients.module.css';
+import { Ingredient } from '../../../containers/BurgerBuilder/BurgerBuilder';
 
 
 

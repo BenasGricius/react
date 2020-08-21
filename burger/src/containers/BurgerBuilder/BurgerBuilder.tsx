@@ -15,17 +15,11 @@ import { InitialStateProps } from '../../store/reducers/burgerBuilder';
 import * as burgerBuilderActions from '../../store/actions/index';
 import { MapsStateToProps } from '../Checkout/Checkout';
 
-
-
-
-
 // interface  addProps{
 //     salad:string,
 //     bacon:string,
 //     cheese:string,
-//     meat:string,
-    
-    
+//     meat:string,        
 // }
 
  export interface Ingredient{
@@ -63,14 +57,11 @@ export interface BurgerBuilderProps extends RouteComponentProps{
    ingredients:Ingredient
 }
 
- export class BurgerBuilder extends Component<BurgerBuilderProps, BurgerBuilderState>{
-    
+ export class BurgerBuilder extends Component<BurgerBuilderProps, BurgerBuilderState>{   
 
     state={
         // ingredients:{} as Ingredient,      
-        purchasing:false,
-       
-        
+        purchasing:false,           
     } 
 
     componentDidMount(){
@@ -87,9 +78,7 @@ export interface BurgerBuilderProps extends RouteComponentProps{
                 return sum+el;
             },0);
         return sum>0;
-    }
-
-  
+        } 
 
 
     // addIngredientHandler = (type: keyof addProps)=>{

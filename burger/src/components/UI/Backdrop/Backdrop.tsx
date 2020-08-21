@@ -1,19 +1,14 @@
-import React,{MouseEvent} from 'react';
-import classes from './Backdrop.module.css'
+import React, { MouseEvent } from "react";
+import classes from "./Backdrop.module.css";
 
-
-interface BackDropProps{
-    clicked?: ((event: React.MouseEvent) => void);    
-    show?:boolean;
-    
-    
-
+interface BackDropProps {
+  clicked?: (event: React.MouseEvent) => void;
+  show?: boolean;
 }
 
-
-const Backdrop = (props:BackDropProps) => (
-    props.show?(<div className={classes.Backdrop} onClick={props.clicked}></div>):null
-);
+const Backdrop = (props: BackDropProps) =>
+  props.show ? (
+    <div className={classes.Backdrop} onClick={props.clicked}></div>
+  ) : null;
 
 export default Backdrop;
-

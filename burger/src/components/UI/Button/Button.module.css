@@ -31,7 +31,7 @@
 
 }
 
-.Button:disabled{
-  color:#ccc;
-  cursor:not-allowed;
+.Button:disabled {
+  color: #ccc;
+  cursor: not-allowed;
 }
